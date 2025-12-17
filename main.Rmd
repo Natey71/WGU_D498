@@ -78,9 +78,10 @@ ggplot(most_common_month_df, aes(x = month, y = n)) +
     theme(
         plot.title = element_text(hjust = 0.5) # Set title to middle
     )
-# Question 1 Analysis:
-# Across all 3 cities June is when the bikes are most used
 ```
+# Summary
+## I grouped the trips by city and by month, using a sum for total number of trips each month calculated. Using bar charts I showed 1 bar chart for each of the cities, with the x-axis being the month and y-axis showing the count per month. Across the 3 citites June had the highest usage for bikes, making it the most common month to take a bike out around town. Chicago had the largest increase from month to month usage being from May - June. New York City had very similar pattern as Chicago with steady increase from January - June. Washington had a steady increase across the months until May, when they dipped from April and then climbing back up in June around 5000 more in June with May being less the April. With these cities all being in the northern part of the United States we can see that the usage is very seasonal with summer being a high usage since the weather is a lot nicer in the these locations than winter and spring seasons
+
 
 
 # Question 2
@@ -120,12 +121,10 @@ ggplot(combined_peak_df, aes(x = month, y = n, color = peak_period, group = peak
     theme (
         plot.title = element_text(hjust = 0.5) # Set title in middle of chart
     )
-# Question 2 Analysis:
-# This is was not what I was expecting. It seems each month the rides are higher during what I defined 
-# as OFF-PEAK when June hit the were almost double the rides during OFF-PEAK. It was fun finding out
-# to help me relate back to my job. Seeing this we can assume the bikes are used for riding around the city 
-# this can mean to hang with friends, run errands or just having a nice ride around the city.
 ```
+# Summary
+## To determine whether the bikes are used for commuting or leisure we defined what would be compute hours as ON-PEAK (7-9 AM & 4-6 PM) and OFF-PEAK periods which would occur outside the 4 hours. I then calculated the sum of usage for each city by month showing 2 lines for ON-PEAK and OFF-PEAK. Across all cities and months the OFF-PEAK is consitently higher the ON-PEAK. During the month of June the OFF-PEAK is roughly double the amount of usage the ON-PEAK usage. Seeing this we can determine that the bikes are not dominated by individuals commuting to work. We could dive deeper into by grabbing the user home address where they start and where the end up each day. Then by checking if the user commutes multiple times a day and if the start and stop desinations match the other of previous trip.
+
 # Question 3: 
 ## What is the minimum, median, and maximum ride duration for each of the city by month. 
 ```{r}
@@ -153,9 +152,6 @@ ggplot(box_and_whisker_df, aes(x = month, y = Trip.Duration, fill = City.Name)) 
     theme(
         plot.title = element_text(hjust = 0.5) # Adjust chart title to middle of chart
     )
-# Question 3 Analysis:
-# The median ride distance in seconds changes across the months and does not correlate with the average temp of
-# the given month
-
 ```
-
+# Summary
+## I analyzed the distribution of trip duration for each city by month using a box-and-whisker plot, which shows the minimum, first quartile, median, third quartile, and maximum ride durations in seconds. After making one chart which showed major distortion due to a few rides I decided to only include the 95th percentile of durations to improve the visualization. 
