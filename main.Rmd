@@ -79,8 +79,13 @@ ggplot(most_common_month_df, aes(x = month, y = n)) +
         plot.title = element_text(hjust = 0.5) # Set title to middle
     )
 ```
+```{r}
+most_common_month_df %>%
+  group_by(city) %>%
+  slice_max(n, n = 1, with_ties = FALSE)
+```
 # Summary
-## I grouped the trips by city and by month, using a sum for total number of trips each month calculated. Using bar charts I showed 1 bar chart for each of the cities, with the x-axis being the month and y-axis showing the count per month. Across the 3 citites June had the highest usage for bikes, making it the most common month to take a bike out around town. Chicago had the largest increase from month to month usage being from May - June. New York City had very similar pattern as Chicago with steady increase from January - June. Washington had a steady increase across the months until May, when they dipped from April and then climbing back up in June around 5000 more in June with May being less the April. With these cities all being in the northern part of the United States we can see that the usage is very seasonal with summer being a high usage since the weather is a lot nicer in the these locations than winter and spring seasons
+## I grouped the trips by city and by month, using a sum for total number of trips each month calculated. Using bar charts I showed 1 bar chart for each of the cities, with the x-axis being the month and y-axis showing the count per month. Across the 3 citites June had the highest usage for bikes, making it the most common month to take a bike out around town. Chicago with a total trip of 98,081, and had the largest increase from month to month usage being from May - June. New York City with a total trip count of 76,022 and Chicago had a drop from Feb - March then increasing over the following months with each to increase over the next month. Washington with a total ride count of 68,339, had a steady increase across the months until May, when they dipped from April and then climbing back up in June around 5000 more in June with May being less the April. With these cities all being in the northern part of the United States we can see that the usage is very seasonal with summer being a high usage since the weather is a lot nicer in the these locations than winter and spring seasons
 
 
 
@@ -122,8 +127,13 @@ ggplot(combined_peak_df, aes(x = month, y = n, color = peak_period, group = peak
         plot.title = element_text(hjust = 0.5) # Set title in middle of chart
     )
 ```
+```{r} 
+combined_peak_df %>%
+  group_by(City.Name, month) %>%
+  mutate(percent = n / sum(n))
+```
 # Summary
-## To determine whether the bikes are used for commuting or leisure we defined what would be compute hours as ON-PEAK (7-9 AM & 4-6 PM) and OFF-PEAK periods which would occur outside the 4 hours. I then calculated the sum of usage for each city by month showing 2 lines for ON-PEAK and OFF-PEAK. Across all cities and months the OFF-PEAK is consitently higher the ON-PEAK. During the month of June the OFF-PEAK is roughly double the amount of usage the ON-PEAK usage. Seeing this we can determine that the bikes are not dominated by individuals commuting to work. We could dive deeper into by grabbing the user home address where they start and where the end up each day. Then by checking if the user commutes multiple times a day and if the start and stop desinations match the other of previous trip.
+## To determine whether the bikes are used for commuting or leisure we defined what would be compute hours as ON-PEAK (7-9 AM & 4-6 PM) and OFF-PEAK periods which would occur outside the 4 hours. I then calculated the sum of usage for each city by month showing 2 lines for ON-PEAK and OFF-PEAK. Across all cities and months the OFF-PEAK is consitently higher the ON-PEAK. During the month of June the OFF-PEAK is about 2.0 times the amount of usage the ON-PEAK usage. In June the OFF-PEAK in Chicago is about 2.0x, New York City caw a increase about 2.45x and Washington with a 2.94x increase. Seeing this we can determine that the bikes are not dominated by individuals commuting to work. We could dive deeper into by grabbing the user home address where they start and where the end up each day. Then by checking if the user commutes multiple times a day and if the start and stop desinations match the other of previous trip.
 
 # Question 3: 
 ## What is the minimum, median, and maximum ride duration for each of the city by month. 
@@ -153,5 +163,23 @@ ggplot(box_and_whisker_df, aes(x = month, y = Trip.Duration, fill = City.Name)) 
         plot.title = element_text(hjust = 0.5) # Adjust chart title to middle of chart
     )
 ```
+```{r}
+q95 <- quantile(combined_df$Trip.Duration, 0.95)
+
+box_and_whisker_df %>%
+  filter(Trip.Duration <= q95) %>%
+  mutate(month = month(Start.Time, label = TRUE, abbr = TRUE)) %>%
+  group_by(City.Name, month) %>%
+  summarise(
+    n = n(),
+    min = min(Trip.Duration),
+    q1 = quantile(Trip.Duration, 0.25),
+    median = median(Trip.Duration),
+    mean = mean(Trip.Duration),
+    q3 = quantile(Trip.Duration, 0.75),
+    max = max(Trip.Duration),
+    .groups = "drop"
+  )
+```
 # Summary
-## I analyzed the distribution of trip duration for each city by month using a box-and-whisker plot, which shows the minimum, first quartile, median, third quartile, and maximum ride durations in seconds. After making one chart which showed major distortion due to a few rides I decided to only include the 95th percentile of durations to improve the visualization. 
+## I analyzed the distribution of trip duration for each city by month using a box-and-whisker plot, which shows the minimum, first quartile, median, third quartile, and maximum ride durations in seconds. After making one chart which showed major distortion due to a few rides I decided to only include the 95th percentile of Trip.Duration to improve the visualization rather than showing rare long trips. The median trip duration increased from winter to summer months across all 3 of the cities. After removing the 95th percentile we removed rare maximum ride distances and upper tail is more true max. We are able to see it is focused in the summer months with the winter months being more spread out for the maximum ride distance.  
